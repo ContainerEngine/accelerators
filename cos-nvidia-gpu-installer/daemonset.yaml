@@ -8,8 +8,6 @@ spec:
     metadata:
       labels:
         name: cos-nvidia-installer
-        # Update the version tag here and `LAKITU_KERNEL_SHA1` while using against new COS releases.
-        cos-version: cos-beta-59-9460-20-0
     spec:
       hostNetwork: true
       hostPID: true
@@ -40,9 +38,6 @@ spec:
         securityContext:
           privileged: true
         env:
-          # The kernel SHA1 here should correspond to the GCI_VERSION specified by default under cluster/gce/config-default.sh 
-          - name: LAKITU_KERNEL_SHA1
-            value: 26481563cb3788ad254c2bf2126b843c161c7e48
           - name: BASE_DIR
             value: "/rootfs/nvidia"
         volumeMounts:
