@@ -149,7 +149,8 @@ verify_base_image() {
 cache_kernel_commit() {
     # Attempt to cache Kernel Commit ID from /etc/os-release if it's not already set.
     if [[ -z ${LAKITU_KERNEL_SHA1+x} ]]; then
-        local kernel_sha=$(grep "^KERNEL_COMMIT_ID=" /etc/os-release)
+        local kernel_sha
+        kernel_sha=$(grep "^KERNEL_COMMIT_ID=" /etc/os-release)
         if [[ $? != 0 ]]; then
             echo "Failed to identify kernel commit ID for underlying COS base image from /etc/os-release"
             cat /etc/os-release
