@@ -5,7 +5,7 @@ This is a recipe for installating Nvidia GPU Drivers in Container Engine.
 On a Container Engine cluster with GPUs provisioned in one or more node pools, you can run the following command to install Nvidia GPU drivers.
 
 ```shell
-kubectl create -f https://raw.githubusercontent.com/ContainerEngine/accelerators/master/cos-nvidia-gpu-installer/cos-installer-daemonset.yaml
+kubectl create -f https://raw.githubusercontent.com/ContainerEngine/accelerators/master/cos-nvidia-gpu-installer/daemonset.yaml
 ```
 
 This installer does the following:
