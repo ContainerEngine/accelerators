@@ -50,10 +50,10 @@ NVIDIA_DRIVER_DIR="/nvidia"
 NVIDIA_DRIVER_VERSION="375.26"
 
 # Source: https://developer.nvidia.com/cuda-downloads
-NVIDIA_CUDA_URL="https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run"
+NVIDIA_CUDA_URL="https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_${NVIDIA_DRIVER_VERSION}_linux-run"
 NVIDIA_CUDA_MD5SUM="33e1bd980e91af4e55f3ef835c103f9b"
-NVIDIA_CUDA_PKG_NAME="cuda_8.0.61_375.26_linux.run"
-NVIDIA_DRIVER_PKG_NAME="NVIDIA-Linux-x86_64-375.26.run"
+NVIDIA_CUDA_PKG_NAME="cuda_8.0.61_${NVIDIA_DRIVER_VERSION}_linux.run"
+NVIDIA_DRIVER_PKG_NAME="NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
 
 check_nvidia_device() {
     lspci
