@@ -105,8 +105,6 @@ download_install_nvidia() {
         echo "==================================="
         exit 1
     fi
-    # Create unified memory device file.
-    nvidia-modprobe -c0 -u
     popd
 }
 
