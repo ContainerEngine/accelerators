@@ -49,11 +49,10 @@ KERNEL_SRC_DIR="/lakitu-kernel"
 NVIDIA_DRIVER_DIR="/nvidia"
 NVIDIA_DRIVER_VERSION="375.26"
 
-# Source: https://developer.nvidia.com/cuda-downloads
-NVIDIA_CUDA_URL="https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run"
-NVIDIA_CUDA_MD5SUM="33e1bd980e91af4e55f3ef835c103f9b"
-NVIDIA_CUDA_PKG_NAME="cuda_8.0.61_375.26_linux.run"
-NVIDIA_DRIVER_PKG_NAME="NVIDIA-Linux-x86_64-375.26.run"
+# Source: https://www.nvidia.com/Download/index.aspx?lang=en-us
+NVIDIA_DRIVER_URL="https://us.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
+NVIDIA_DRIVER_MD5SUM="d60819b2e377398c7296999ab5e7c1a4"
+NVIDIA_DRIVER_PKG_NAME="NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
 
 check_nvidia_device() {
     lspci
@@ -83,19 +82,16 @@ prepare_kernel_source() {
 }
 
 download_install_nvidia() {
-    local pkg_name="${NVIDIA_CUDA_PKG_NAME}"
-    local url="${NVIDIA_CUDA_URL}"
+    local pkg_name="${NVIDIA_DRIVER_PKG_NAME}"
+    local url="${NVIDIA_DRIVER_URL}"
     local log_file_name="${NVIDIA_DRIVER_DIR}/nvidia-installer.log"
 
     mkdir -p "${NVIDIA_DRIVER_DIR}"
     pushd "${NVIDIA_DRIVER_DIR}"
 
-    echo "Downloading Nvidia CUDA package from ${url} ..."
-    curl -L -s "${url}" -o "${pkg_name}"
-    echo "${NVIDIA_CUDA_MD5SUM} ${pkg_name}" | md5sum --check
-
-    echo "Extracting Nvidia CUDA package ..."
-    sh ${pkg_name} --extract="$(pwd)"
+    echo "Downloading Nvidia driver from ${url} ..."
+    curl -L -s -S "${url}" -o "${pkg_name}"
+    echo "${NVIDIA_DRIVER_MD5SUM} ${pkg_name}" | md5sum --check
 
     echo "Running the Nvidia driver installer ..."
     if ! sh "${NVIDIA_DRIVER_PKG_NAME}" --kernel-source-path="${KERNEL_SRC_DIR}" --silent --accept-license --keep --log-file-name="${log_file_name}"; then
@@ -105,8 +101,6 @@ download_install_nvidia() {
         echo "==================================="
         exit 1
     fi
-    # Create unified memory device file.
-    nvidia-modprobe -c0 -u
     popd
 }
 
