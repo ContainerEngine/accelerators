@@ -33,6 +33,7 @@ set -x
 # ${BASE_DIR}/bin/* --> Nvidia debug utilities
 # ${BASE_DIR}/.cache/* --> Nvidia driver artifacts cached for idempotency.
 #
+# DEVICE_PLUGIN_ENABLED - whether the container is running with device plugin enabled. Defaults to false.
 
 BASE_DIR=${BASE_DIR:-"/rootfs/nvidia"}
 CACHE_DIR="${BASE_DIR}/.cache"
@@ -53,6 +54,8 @@ NVIDIA_DRIVER_VERSION="375.26"
 NVIDIA_DRIVER_URL="https://us.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
 NVIDIA_DRIVER_MD5SUM="d60819b2e377398c7296999ab5e7c1a4"
 NVIDIA_DRIVER_PKG_NAME="NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
+
+DEVICE_PLUGIN_ENABLED=${DEVICE_PLUGIN_ENABLED:-"false"}
 
 check_nvidia_device() {
     lspci
@@ -156,8 +159,12 @@ cache_kernel_commit() {
 
 setup_overlay_mounts() {
     mkdir -p ${USR_WRITABLE_DIR} ${USR_WORK_DIR} ${LIB_WRITABLE_DIR} ${LIB_WORK_DIR}
-    mount -t overlay -o lowerdir=/usr,upperdir=${USR_WRITABLE_DIR},workdir=${USR_WORK_DIR} none /usr
-    mount -t overlay -o lowerdir=/lib,upperdir=${LIB_WRITABLE_DIR},workdir=${LIB_WORK_DIR} none /lib
+    if ! mount | grep "lowerdir=/usr,upperdir=${USR_WRITABLE_DIR}"; then
+        mount -t overlay -o lowerdir=/usr,upperdir=${USR_WRITABLE_DIR},workdir=${USR_WORK_DIR} none /usr
+    fi
+    if ! mount | grep "lowerdir=/lib,upperdir=${LIB_WRITABLE_DIR}"; then
+        mount -t overlay -o lowerdir=/lib,upperdir=${LIB_WRITABLE_DIR},workdir=${LIB_WORK_DIR} none /lib
+    fi
 }
 
 exit_if_install_not_needed() {
@@ -169,9 +176,13 @@ exit_if_install_not_needed() {
 }
 
 restart_kubelet() {
-    echo "Sending SIGTERM to kubelet"
-    if pidof kubelet &> /dev/null; then
-        pkill -SIGTERM kubelet
+    if [ "${DEVICE_PLUGIN_ENABLED}" == "true" ]; then
+    	echo "Device plugin enabled. Skip restarting kubelet"
+    else
+        echo "Sending SIGTERM to kubelet"
+        if pidof kubelet &> /dev/null; then
+            pkill -SIGTERM kubelet
+        fi
     fi
 }
 

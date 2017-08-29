@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TAG?=v0.4
+TAG?=v0.5
 REGISTRY?=gcr.io/google_containers
 IMAGE=cos-nvidia-driver-install
 
