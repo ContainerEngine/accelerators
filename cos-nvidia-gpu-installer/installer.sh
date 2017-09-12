@@ -177,7 +177,7 @@ exit_if_install_not_needed() {
 
 restart_kubelet() {
     if [ "${DEVICE_PLUGIN_ENABLED}" == "true" ]; then
-    	echo "Device plugin enabled. Skip restarting kubelet"
+        echo "Device plugin enabled. Skip restarting kubelet"
     else
         echo "Sending SIGTERM to kubelet"
         if pidof kubelet &> /dev/null; then
