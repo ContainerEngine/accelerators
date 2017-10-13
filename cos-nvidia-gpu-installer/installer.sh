@@ -69,11 +69,13 @@ check_nvidia_device() {
 prepare_kernel_source() {
     # Checkout the correct tag.
     pushd "${KERNEL_SRC_DIR}"
-    until git pull origin
-    do
-        echo "Pulling Origin failed for Lakitu kernel source git repo. Retrying after 5 seconds" && sleep 5
-    done
-    git checkout ${LAKITU_KERNEL_SHA1}
+    if ! git checkout ${LAKITU_KERNEL_SHA1}; then
+      until git fetch origin
+      do
+        echo "Fetching origin failed for Lakitu kernel source git repo. Retrying after 5 seconds" && sleep 5
+      done
+      git checkout ${LAKITU_KERNEL_SHA1}
+    fi
 
     # Prepare kernel configu and source for modules.
     echo "Preparing kernel sources ..."
