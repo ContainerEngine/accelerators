@@ -48,11 +48,11 @@ BIN_OUTPUT_DIR="${BASE_DIR}/bin"
 KERNEL_SRC_DIR="/lakitu-kernel"
 
 NVIDIA_DRIVER_DIR="/nvidia"
-NVIDIA_DRIVER_VERSION="375.51"
+NVIDIA_DRIVER_VERSION="384.81"
 
 # Source: https://www.nvidia.com/Download/index.aspx?lang=en-us
-NVIDIA_DRIVER_URL="https://us.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
-NVIDIA_DRIVER_MD5SUM="beb44468e620f77cbcc25ce33337af01"
+NVIDIA_DRIVER_URL="https://us.download.nvidia.com/tesla/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
+NVIDIA_DRIVER_MD5SUM="2cde54c49bf9af4683ef055f4a126eb9"
 NVIDIA_DRIVER_PKG_NAME="NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
 
 DEVICE_PLUGIN_ENABLED=${DEVICE_PLUGIN_ENABLED:-"false"}
@@ -95,7 +95,7 @@ download_install_nvidia() {
     pushd "${NVIDIA_DRIVER_DIR}"
 
     echo "Downloading Nvidia driver from ${url} ..."
-    curl -L -s -S "${url}" -o "${pkg_name}"
+    curl -L -s -S -f "${url}" -o "${pkg_name}"
     echo "${NVIDIA_DRIVER_MD5SUM} ${pkg_name}" | md5sum --check
 
     echo "Running the Nvidia driver installer ..."
