@@ -95,7 +95,7 @@ download_install_nvidia() {
     pushd "${NVIDIA_DRIVER_DIR}"
 
     echo "Downloading Nvidia driver from ${url} ..."
-    curl -L -s -S "${url}" -o "${pkg_name}"
+    curl -L -s -S -f "${url}" -o "${pkg_name}"
     echo "${NVIDIA_DRIVER_MD5SUM} ${pkg_name}" | md5sum --check
 
     echo "Running the Nvidia driver installer ..."
