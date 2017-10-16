@@ -69,13 +69,13 @@ check_nvidia_device() {
 prepare_kernel_source() {
     # Checkout the correct tag.
     pushd "${KERNEL_SRC_DIR}"
-    if ! git checkout ${LAKITU_KERNEL_SHA1}; then
-      until git fetch origin
-      do
-        echo "Fetching origin failed for Lakitu kernel source git repo. Retrying after 5 seconds" && sleep 5
-      done
-      git checkout ${LAKITU_KERNEL_SHA1}
-    fi
+    local -r download_url = "https://chromium.googlesource.com/chromiumos/third_party/kernel/+archive/${LAKITU_KERNEL_SHA1}.tar.gz"
+    local -r archive_filename = "cos-kernel.tar.gz"
+    until curl -sS "${download_url}" -o "${archive_filename}"
+    do
+      echo "Downloading COS kernel sources failed. Retrying after 5 seconds" && sleep 5
+    done
+    tar xf "${archive_filename}"
 
     # Prepare kernel configu and source for modules.
     echo "Preparing kernel sources ..."
